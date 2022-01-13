@@ -17,7 +17,7 @@ func OpenDB() {
 	cfg := config.InitConfig()
 	connStr := fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable", cfg.Driver, cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.Name)
 
-	db, err = sql.Open("postgres", connStr)
+	db, err = sql.Open(cfg.Driver, connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
