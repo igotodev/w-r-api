@@ -1,15 +1,22 @@
 package main
 
 import (
+	"log"
+	"os"
 	"w-r-api/httpd/handler"
 	"w-r-api/platform/db"
 
 	"github.com/gin-gonic/gin"
 )
 
-const address string = "0.0.0.0:8080"
-
 func main() {
+	var address string
+
+	if len(os.Args) < 2 {
+		address = "0.0.0.0:8080"
+	} else {
+		address = os.Args[1]
+	}
 
 	db.OpenDB()
 	defer db.CloseDB()
@@ -27,6 +34,8 @@ func main() {
 		gr.DELETE("/:id", handler.DeleteBook())
 	}
 
-	r.Run(address)
+	if err := r.Run(address); err != nil {
+		log.Fatal(err)
+	}
 
 }

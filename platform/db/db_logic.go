@@ -2,18 +2,21 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"w-r-api/config"
 	"w-r-api/platform"
 
 	_ "github.com/lib/pq"
 )
 
-const connStr string = "postgres://postgres:postgres@localhost:5432/my_db?sslmode=disable"
-
 var db *sql.DB
 var err error
 
 func OpenDB() {
+	cfg := config.InitConfig()
+	connStr := fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable", cfg.Driver, cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.Name)
+
 	db, err = sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
