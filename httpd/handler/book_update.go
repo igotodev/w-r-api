@@ -2,6 +2,7 @@ package handler
 
 import (
 	"w-r-api/platform"
+	"w-r-api/platform/bookvalidator"
 	"w-r-api/platform/db"
 
 	"github.com/gin-gonic/gin"
@@ -26,6 +27,15 @@ func UpdateBook() gin.HandlerFunc {
 		//user cannot update id
 		//new id is generated automatically
 		book.Id = uuid.New().String()
+
+		if !bookvalidator.IsValid(book) {
+			c.JSON(422, gin.H{
+				"error":   true,
+				"message": "fields do not meet requirements",
+			})
+
+			return
+		}
 
 		db.Update(book, idStr)
 

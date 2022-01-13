@@ -2,6 +2,7 @@ package handler
 
 import (
 	"w-r-api/platform"
+	"w-r-api/platform/bookvalidator"
 	"w-r-api/platform/db"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,15 @@ func PostBook() gin.HandlerFunc {
 
 		//user cannot set id it is generated automatically
 		book.Id = uuid.New().String()
+
+		if !bookvalidator.IsValid(book) {
+			c.JSON(422, gin.H{
+				"error":   true,
+				"message": "fields do not meet requirements",
+			})
+
+			return
+		}
 
 		db.Insert(book)
 

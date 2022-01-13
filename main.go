@@ -10,6 +10,7 @@ import (
 const address string = "0.0.0.0:8080"
 
 func main() {
+
 	db.OpenDB()
 	defer db.CloseDB()
 
