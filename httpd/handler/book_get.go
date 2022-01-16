@@ -19,6 +19,13 @@ func GetBook() gin.HandlerFunc {
 
 		book := db.Select(idStr)
 
-		c.JSON(200, book)
+		if book.Id == "" {
+			c.JSON(404, gin.H{
+				"error":   true,
+				"message": "invalid id",
+			})
+		} else {
+			c.JSON(200, book)
+		}
 	}
 }

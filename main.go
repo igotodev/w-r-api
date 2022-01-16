@@ -24,6 +24,7 @@ func main() {
 	r := gin.Default()
 
 	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 
 	gr := r.Group("/api/v1/book")
 	{

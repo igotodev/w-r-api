@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"w-r-api/platform"
 	"w-r-api/platform/bookvalidator"
 	"w-r-api/platform/db"
+	"w-r-api/platform/entity"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -11,7 +11,7 @@ import (
 
 func PostBook() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var book platform.Book
+		var book entity.Book
 
 		if err := c.ShouldBindJSON(&book); err != nil {
 			c.JSON(422, gin.H{
@@ -25,10 +25,10 @@ func PostBook() gin.HandlerFunc {
 		//user cannot set id it is generated automatically
 		book.Id = uuid.New().String()
 
-		if !bookvalidator.IsValid(book) {
+		if err := bookvalidator.IsValid(book); err != nil {
 			c.JSON(422, gin.H{
 				"error":   true,
-				"message": "fields do not meet requirements",
+				"message": err.Error(),
 			})
 
 			return

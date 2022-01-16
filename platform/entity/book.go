@@ -1,4 +1,4 @@
-package platform
+package entity
 
 type Book struct {
 	Id                string `json:"id"`
