@@ -25,6 +25,7 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
+	defer myDB.Close()
 
 	dbStorage := db.NewStorage(myDB)
 	bookService := service.NewService(dbStorage)
