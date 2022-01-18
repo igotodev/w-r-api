@@ -1,13 +1,13 @@
-package bookvalidator
+package validator
 
 import (
 	"fmt"
 	"time"
-	"w-r-api/platform/entity"
+	"w-r-api/internal/domain/book/model"
 )
 
 // simple validator
-func IsValid(book entity.Book) error {
+func IsValid(book model.Book) error {
 	if len(book.Id) < 25 || len(book.Id) > 70 {
 		return fmt.Errorf("id field length must be more than 25 characters and less than 70 characters ")
 	}

@@ -1,19 +1,16 @@
 package handler
 
 import (
-	"w-r-api/platform/bookvalidator"
-	"w-r-api/platform/db"
-	"w-r-api/platform/entity"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"w-r-api/internal/controllers/api"
+	"w-r-api/internal/domain/book/model"
+	"w-r-api/internal/domain/book/validator"
 )
 
-func UpdateBook() gin.HandlerFunc {
+func PostBook(service api.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		idStr := c.Param("id")
-
-		var book entity.Book
+		var book model.Book
 
 		if err := c.ShouldBindJSON(&book); err != nil {
 			c.JSON(422, gin.H{
@@ -24,11 +21,10 @@ func UpdateBook() gin.HandlerFunc {
 			return
 		}
 
-		//user cannot update id
-		//new id is generated automatically
+		//user cannot set id it is generated automatically
 		book.Id = uuid.New().String()
 
-		if err := bookvalidator.IsValid(book); err != nil {
+		if err := validator.IsValid(book); err != nil {
 			c.JSON(422, gin.H{
 				"error":   true,
 				"message": err.Error(),
@@ -37,9 +33,9 @@ func UpdateBook() gin.HandlerFunc {
 			return
 		}
 
-		db.Update(book, idStr)
+		service.Create(&book)
 
-		c.JSON(200, gin.H{
+		c.JSON(201, gin.H{
 			"error":   false,
 			"message": "",
 		})

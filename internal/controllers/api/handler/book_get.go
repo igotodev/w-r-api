@@ -1,23 +1,22 @@
 package handler
 
 import (
-	"w-r-api/platform/db"
-
 	"github.com/gin-gonic/gin"
+	"w-r-api/internal/controllers/api"
 )
 
-func GetAllBooks() gin.HandlerFunc {
+func GetAllBooks(service api.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(200, db.SelectAll())
+		c.JSON(200, service.GetAll())
 	}
 }
 
-func GetBook() gin.HandlerFunc {
+func GetBook(service api.Service) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 
-		book := db.Select(idStr)
+		book := service.GetByID(idStr)
 
 		if book.Id == "" {
 			c.JSON(404, gin.H{
